@@ -1,14 +1,14 @@
 import React from "react";
-import Navbar from "./Components/Navbar";
-import Footer from "./Components/Footer";
+import Navbar from "./Components/home_component/Navbar";
+import Footer from "./Components/home_component/Footer";
 import AppRoutes from "./routes"; // Assuming you have a routes.jsx file
 
 function App() {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <AppRoutes />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

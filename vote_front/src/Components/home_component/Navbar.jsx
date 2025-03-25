@@ -1,12 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaHome,
-  FaInfoCircle,
-  FaEnvelope,
-  FaSignInAlt,
-  FaUserPlus,
-} from "react-icons/fa"; // Import icons
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,33 +48,33 @@ function Navbar() {
           <div className="hidden md:flex space-x-10 items-center">
             <Link
               to="/"
-              className="text-lg text-white hover:text-gray-200 transition duration-300 flex items-center"
+              className="text-lg text-white hover:text-gray-200 transition duration-300"
             >
-              <FaHome className="mr-2" /> Home
+              Home
             </Link>
             <Link
               to="/about"
-              className="text-lg text-white hover:text-gray-200 transition duration-300 flex items-center"
+              className="text-lg text-white hover:text-gray-200 transition duration-300"
             >
-              <FaInfoCircle className="mr-2" /> About
+              About
             </Link>
             <Link
               to="/contact"
-              className="text-lg text-white hover:text-gray-200 transition duration-300 flex items-center"
+              className="text-lg text-white hover:text-gray-200 transition duration-300"
             >
-              <FaEnvelope className="mr-2" /> Contact
+              Contact
             </Link>
             <Link
               to="/login"
-              className="text-lg text-white hover:text-gray-200 transition duration-300 flex items-center"
+              className="text-lg text-white hover:text-gray-200 transition duration-300"
             >
-              <FaSignInAlt className="mr-2" /> Login
+              Login
             </Link>
             <Link
               to="/register"
-              className="text-lg text-white hover:text-gray-200 transition duration-300 flex items-center"
+              className="text-lg text-white hover:text-gray-200 transition duration-300"
             >
-              <FaUserPlus className="mr-2" /> Register
+              Register
             </Link>
           </div>
         </div>
@@ -91,33 +84,33 @@ function Navbar() {
           <div className="md:hidden bg-blue-600">
             <Link
               to="/"
-              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300 flex items-center"
+              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300"
             >
-              <FaHome className="mr-2" /> Home
+              Home
             </Link>
             <Link
               to="/about"
-              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300 flex items-center"
+              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300"
             >
-              <FaInfoCircle className="mr-2" /> About
+              About
             </Link>
             <Link
               to="/contact"
-              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300 flex items-center"
+              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300"
             >
-              <FaEnvelope className="mr-2" /> Contact
+              Contact
             </Link>
             <Link
               to="/login"
-              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300 flex items-center"
+              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300"
             >
-              <FaSignInAlt className="mr-2" /> Login
+              Login
             </Link>
             <Link
               to="/register"
-              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300 flex items-center"
+              className="block text-white py-4 px-6 hover:bg-blue-700 transition duration-300"
             >
-              <FaUserPlus className="mr-2" /> Register
+              Register
             </Link>
           </div>
         )}

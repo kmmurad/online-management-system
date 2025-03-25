@@ -1,27 +1,66 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Home from "./Pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Voter from "./pages/Voter";
-import Candidate from "./pages/Candidate";
-import Admin from "./pages/Admin";
-import Results from "./pages/Results";
-import About from "./Pages/about";
-import Contact from "./Pages/Contact";
+
+// Public routes
+import Home from "./Pages/home/Home";
+import Login from "./Pages/home/Login";
+import Register from "./Pages/home/Register";
+import About from "./Pages/home/About";
+import Contact from "./Pages/home/Contact";
+import Candidates from "./Pages/canditate/canditates";
+
+// Admin routes
+import AdminDashboard from "./Pages/admin/adminDashboard";
+import AdminElections from "./Pages/admin/Elections";
+import AdminCandidates from "./Pages/admin/Candidates";
+import AdminVoters from "./Pages/admin/Voters";
+import AdminResults from "./Pages/admin/Results";
+
+// Voter routes
+import VoterProfile from "./Pages/voter/Profile";
+import VoterElections from "./Pages/voter/Elections";
+import VoterVoting from "./Pages/voter/Voting";
+import VoterResults from "./Pages/voter/Results";
+
+// Candidate routes
+import CandidateProfile from "./Pages/canditate/Profile";
+import CandidateElections from "./Pages/canditate/Elections";
+import CandidateResults from "./Pages/canditate/Results";
+import CandidateDashboard from "./Pages/canditate/candidateDashboard";
 
 function AppRoutes() {
   return (
     <Routes>
+      {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/voter" element={<Voter />} />
-      <Route path="/candidate" element={<Candidate />} />
-      <Route path="/admin" element={<Admin />} />
-      <Route path="/results" element={<Results />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
+
+      {/* Admin Routes */}
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/elections" element={<AdminElections />} />
+      <Route path="/admin/candidates" element={<AdminCandidates />} />
+      <Route path="/admin/voters" element={<AdminVoters />} />
+      <Route path="/admin/results" element={<AdminResults />} />
+
+      {/* Voter Routes */}
+      <Route path="/voter/profile" element={<VoterProfile />} />
+      <Route path="/voter/elections" element={<VoterElections />} />
+      <Route path="/voter/vote/:electionId" element={<VoterVoting />} />
+      <Route path="/voter/results" element={<VoterResults />} />
+
+      {/* Candidate Routes */}
+      <Route path="/candidate/profile" element={<CandidateProfile />} />
+      <Route path="/candidate/elections" element={<CandidateElections />} />
+      <Route path="/candidate/results" element={<CandidateResults />} />
+      <Route path="/candidate/Candidates" element={<Candidates />} />
+      <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
+
+      {/* Fallback route */}
+      <Route path="*" element={<Home />} />
     </Routes>
   );
 }
