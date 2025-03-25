@@ -8,13 +8,14 @@ import {
   FiMessageSquare,
   FiUser,
   FiCheckCircle,
+  FiAward,
 } from "react-icons/fi";
 
-const NavItem = ({ to, icon, label }) => (
+const NavItem = ({ to, icon, label, badgeCount }) => (
   <NavLink
     to={to}
     className={({ isActive }) => `
-      flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors
+      flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-colors
       ${
         isActive
           ? "bg-indigo-50 text-indigo-700 font-medium"
@@ -23,18 +24,30 @@ const NavItem = ({ to, icon, label }) => (
     `}
     end
   >
-    <span className="mr-3 text-lg">{icon}</span>
-    {label}
+    <div className="flex items-center">
+      <span className="mr-3 text-lg">{icon}</span>
+      {label}
+    </div>
+    {badgeCount > 0 && (
+      <span className="bg-indigo-100 text-indigo-800 text-xs font-medium px-2 py-0.5 rounded-full">
+        {badgeCount}
+      </span>
+    )}
   </NavLink>
 );
 
-const SideNav = ({ userRole = "voter", userData = {} }) => {
+const SideNav = ({ userRole = "voter", userData = {}, electionStats = {} }) => {
   // Navigation items configuration with additional metadata
   const navConfig = {
     admin: {
       items: [
         { to: "/admin/dashboard", icon: <FiHome />, label: "Dashboard" },
-        { to: "/admin/elections", icon: <FiCalendar />, label: "Elections" },
+        {
+          to: "/admin/elections",
+          icon: <FiCalendar />,
+          label: "Elections",
+          badgeCount: electionStats.pendingElections || 0,
+        },
         { to: "/admin/candidates", icon: <FiUsers />, label: "Candidates" },
         { to: "/admin/voters", icon: <FiUsers />, label: "Voters" },
         { to: "/admin/results", icon: <FiPieChart />, label: "Results" },
@@ -51,6 +64,13 @@ const SideNav = ({ userRole = "voter", userData = {} }) => {
           to: "/candidate/elections",
           icon: <FiCalendar />,
           label: "My Elections",
+          badgeCount: electionStats.activeElections || 0,
+        },
+        {
+          to: "/candidate/applications",
+          icon: <FiAward />,
+          label: "My Applications",
+          badgeCount: electionStats.pendingApplications || 0,
         },
         { to: "/candidate/profile", icon: <FiUser />, label: "My Profile" },
         { to: "/candidate/results", icon: <FiPieChart />, label: "Results" },
@@ -65,6 +85,7 @@ const SideNav = ({ userRole = "voter", userData = {} }) => {
           to: "/voter/elections",
           icon: <FiCalendar />,
           label: "Active Elections",
+          badgeCount: electionStats.activeElections || 0,
         },
         { to: "/voter/vote", icon: <FiCheckCircle />, label: "Cast Vote" },
         { to: "/voter/results", icon: <FiPieChart />, label: "View Results" },
@@ -79,7 +100,7 @@ const SideNav = ({ userRole = "voter", userData = {} }) => {
     navConfig[userRole] || navConfig.voter;
 
   return (
-    <div className="fixed left-0 top-0 bottom-0 w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col">
+    <div className="fixed left-0 top-0 bottom-0 w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col z-50">
       {/* Logo/Branding */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center space-x-2">
@@ -100,6 +121,7 @@ const SideNav = ({ userRole = "voter", userData = {} }) => {
             to={item.to}
             icon={item.icon}
             label={item.label}
+            badgeCount={item.badgeCount || 0}
           />
         ))}
       </nav>

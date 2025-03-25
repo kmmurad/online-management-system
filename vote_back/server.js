@@ -1,96 +1,89 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
-const bodyParser = require("body-parser");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const User = require("./Models/User");
 
 const app = express();
-const PORT = 5000;
 
-// Middleware
+app.use(express.json());
 app.use(cors());
-app.use(bodyParser.json());
 
-// Mock database (replace with a real database like MongoDB later)
-let users = [];
+// MongoDB connection
+mongoose
+  .connect("mongodb://localhost:27017/OC", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Database connected"))
+  .catch((err) => console.error("DB error:", err));
 
-// Register endpoint
-app.post("/api/register", (req, res) => {
-  const { name, email, password, role } = req.body;
-
+// Register User
+app.post("/register", async (req, res) => {
   try {
-    // Validate input
-    if (!name || !email || !password || !role) {
-      return res.status(400).json({ message: "All fields are required" });
+    const user = new User(req.body);
+    await user.save();
+    res.send("User registered");
+  } catch (err) {
+    if (err.code === 11000) {
+      // Duplicate key error (username already exists)
+      res.status(400).send("Username already exists");
+    } else {
+      console.error("Error registering user:", err);
+      res.status(500).send("Error registering user");
     }
-
-    // Check if user already exists
-    const userExists = users.find((user) => user.email === email);
-    if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
-    }
-
-    // Hash password
-    const hashedPassword = bcrypt.hashSync(password, 10);
-
-    // Save user to "database"
-    const newUser = {
-      id: users.length + 1,
-      name,
-      email,
-      password: hashedPassword,
-      role,
-    };
-    users.push(newUser);
-
-    console.log("User registered successfully:", newUser); // Log the new user
-    res
-      .status(201)
-      .json({ message: "User registered successfully", user: newUser });
-  } catch (error) {
-    console.error("Error during registration:", error); // Log the error
-    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-// Login endpoint
-app.post("/api/login", (req, res) => {
-  const { email, password } = req.body;
-
+// Read Users under Register path
+app.get("/register/read", async (req, res) => {
   try {
-    // Validate input
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+    const users = await User.find();
+    res.send(users);
+  } catch (err) {
+    res.status(500).send("Error fetching users");
+  }
+});
+// Login User
+app.post("/login", async (req, res) => {
+  try {
+    const user = await User.findOne(req.body);
+    if (user) {
+      res.json({
+        success: true,
+        data: user, // Send user data as a response
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Invalid credentials",
+      });
     }
-
-    // Find user in "database"
-    const user = users.find((user) => user.email === email);
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
-    }
-
-    // Check password
-    const isPasswordValid = bcrypt.compareSync(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid password" });
-    }
-
-    // Generate JWT token
-    const token = jwt.sign({ id: user.id, role: user.role }, "secretkey", {
-      expiresIn: "1h",
-    });
-
-    console.log("User logged in successfully:", user.email); // Log the login
-    res.status(200).json({ token, role: user.role });
-  } catch (error) {
-    console.error("Error during login:", error); // Log the error
-    res.status(500).json({ message: "Internal server error" });
+  } catch (err) {
+    res.status(500).send("Error logging in");
   }
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// Update User
+app.put("/update/:id", async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.params.id, req.body);
+    res.send("User updated");
+  } catch (err) {
+    res.status(500).send("Error updating user");
+  }
+});
+
+// Delete User
+app.delete("/delete/:id", async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.send("User deleted");
+  } catch (err) {
+    res.status(500).send("Error deleting user");
+  }
+});
+
+// Server listener
+app.listen(5000, () => {
+  console.log("Server running on port 5000");
 });

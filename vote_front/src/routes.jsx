@@ -8,6 +8,8 @@ import Register from "./Pages/home/Register";
 import About from "./Pages/home/About";
 import Contact from "./Pages/home/Contact";
 import Candidates from "./Pages/canditate/canditates";
+import ActiveElectionsPage from "./Components/active_election";
+import CandidateActiveElections from "./Pages/canditate/CandidateActiveElections";
 
 // Admin routes
 import AdminDashboard from "./Pages/admin/adminDashboard";
@@ -37,7 +39,7 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
-
+      <Route path="/active/elections" element={<ActiveElectionsPage />} />
       {/* Admin Routes */}
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -45,21 +47,22 @@ function AppRoutes() {
       <Route path="/admin/candidates" element={<AdminCandidates />} />
       <Route path="/admin/voters" element={<AdminVoters />} />
       <Route path="/admin/results" element={<AdminResults />} />
-
       {/* Voter Routes */}
       <Route path="/voter/profile" element={<VoterProfile />} />
       <Route path="/voter/elections" element={<VoterElections />} />
       <Route path="/voter/vote/:electionId" element={<VoterVoting />} />
       <Route path="/voter/results" element={<VoterResults />} />
-
       {/* Candidate Routes */}
       <Route path="/candidate/profile" element={<CandidateProfile />} />
       <Route path="/candidate/elections" element={<CandidateElections />} />
       <Route path="/candidate/results" element={<CandidateResults />} />
       <Route path="/candidate/Candidates" element={<Candidates />} />
       <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
-
-      {/* Fallback route */}
+      <Route
+        path="/candidate/candidateActiveElections"
+        element={<CandidateActiveElections />}
+      />
+      C{/* Fallback route */}
       <Route path="*" element={<Home />} />
     </Routes>
   );
