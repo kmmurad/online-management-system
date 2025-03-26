@@ -6,6 +6,7 @@ import {
   FiClock,
   FiUserCheck,
   FiCheckCircle,
+  FiCalendar,
 } from "react-icons/fi";
 
 const ActiveElection = () => {
@@ -13,41 +14,42 @@ const ActiveElection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock data - replace with real API call later
+    // Mock data with consistent structure
     const mockElections = [
       {
         id: "elec-1",
         name: "Student Council 2023",
         positions: ["President", "Vice President", "Treasurer"],
         status: "voting",
-        deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
+        deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         candidatesCount: 8,
       },
       {
         id: "elec-2",
-        name: "Class Representatives",
+        name: "Class Representatives Election",
         positions: ["Science Rep", "Arts Rep"],
         status: "registration",
-        deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days from now
+        deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
         candidatesCount: 3,
       },
       {
         id: "elec-3",
-        name: "Sports Committee",
-        positions: ["Captain", "Manager"],
+        name: "Sports Committee Selection",
+        positions: ["Captain", "Manager", "Coordinator"],
         status: "results",
-        deadline: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
+        deadline: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
         candidatesCount: 5,
       },
     ];
 
-    // Simulate API loading delay
     const timer = setTimeout(() => {
       setElections(
         mockElections.map((election) => ({
           ...election,
           formattedDate: format(new Date(election.deadline), "MMM do, yyyy"),
           timeRemaining: formatDistanceToNow(new Date(election.deadline)),
+          // Ensure consistent position count for layout
+          displayedPositions: election.positions.slice(0, 3), // Show max 3 positions
         }))
       );
       setLoading(false);
@@ -58,12 +60,10 @@ const ActiveElection = () => {
 
   const handleViewCandidates = (electionId) => {
     alert(`Would navigate to candidates for election ${electionId}`);
-    // In a real app: navigate(`/elections/${electionId}/candidates`);
   };
 
   const handleCastVote = (electionId) => {
     alert(`Would navigate to voting for election ${electionId}`);
-    // In a real app: navigate(`/elections/${electionId}/vote`);
   };
 
   if (loading) return <LoadingSpinner />;
@@ -78,7 +78,7 @@ const ActiveElection = () => {
 
         <div className="mt-8">
           {elections.length > 0 ? (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {elections.map((election) => (
                 <ElectionCard
                   key={election.id}
@@ -116,55 +116,74 @@ const ElectionCard = ({ election, onViewCandidates, onCastVote }) => {
     registration: {
       color: "bg-blue-100 text-blue-800",
       label: "Registration Open",
+      actionText: "Register Now",
+      actionClass: "bg-blue-600 hover:bg-blue-700",
     },
     voting: {
       color: "bg-green-100 text-green-800",
       label: "Voting Active",
+      actionText: "Cast Your Vote",
+      actionClass: "bg-green-600 hover:bg-green-700",
     },
     results: {
       color: "bg-purple-100 text-purple-800",
       label: "Results Available",
+      actionText: "View Results",
+      actionClass: "bg-purple-600 hover:bg-purple-700",
     },
   };
 
   const status = statusConfig[election.status] || {
     color: "bg-gray-100 text-gray-800",
     label: "Election",
+    actionText: "View Details",
+    actionClass: "bg-gray-600 hover:bg-gray-700",
   };
 
   return (
-    <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-200 hover:shadow-lg transition-all duration-200">
+    <div className="flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-all duration-200">
       {/* Card Header */}
       <div className={`px-4 py-3 ${status.color}`}>
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3
+            className="text-lg font-semibold line-clamp-1"
+            title={election.name}
+          >
             {election.name}
           </h3>
-          <span className="px-2 py-1 text-xs font-semibold rounded-full">
+          <span className="px-2 py-1 text-xs font-semibold rounded-full bg-white/90">
             {status.label}
           </span>
         </div>
       </div>
 
-      {/* Card Body */}
-      <div className="px-4 py-5">
-        <div className="mb-4">
-          <div className="flex items-center text-sm text-gray-600 mb-2">
-            <FiClock className="mr-2 text-gray-500" />
-            <span>Deadline: {election.formattedDate}</span>
+      {/* Card Body - Flex-grow makes this section take remaining space */}
+      <div className="flex-grow px-4 py-5 flex flex-col">
+        {/* Info Section */}
+        <div className="mb-4 space-y-3">
+          <div className="flex items-center text-sm text-gray-600">
+            <FiClock className="mr-2 flex-shrink-0 text-gray-500" />
+            <span className="line-clamp-1">
+              <span className="font-medium">Deadline:</span>{" "}
+              {election.formattedDate}
+            </span>
           </div>
           <div className="flex items-center text-sm text-gray-600">
-            <FiUsers className="mr-2 text-gray-500" />
-            <span>{election.candidatesCount} candidates registered</span>
+            <FiUsers className="mr-2 flex-shrink-0 text-gray-500" />
+            <span>
+              <span className="font-medium">{election.candidatesCount}</span>{" "}
+              candidates
+            </span>
           </div>
         </div>
 
-        <div className="mb-4">
+        {/* Positions Section - Fixed height with overflow */}
+        <div className="mb-4 flex-grow-0">
           <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
             Available Positions
           </h4>
-          <div className="flex flex-wrap gap-2">
-            {election.positions.map((position) => (
+          <div className="flex flex-wrap gap-2 max-h-20 overflow-y-auto py-1">
+            {election.displayedPositions.map((position) => (
               <span
                 key={position}
                 className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700"
@@ -175,11 +194,11 @@ const ElectionCard = ({ election, onViewCandidates, onCastVote }) => {
           </div>
         </div>
 
-        {/* Action Buttons - Same for all cards */}
-        <div className="space-y-2">
+        {/* Action Buttons - Fixed at bottom */}
+        <div className="mt-auto pt-4 space-y-2">
           <button
             onClick={() => onViewCandidates(election.id)}
-            className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+            className="w-full flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
           >
             <FiUserCheck className="mr-2" />
             View Candidates
@@ -187,10 +206,10 @@ const ElectionCard = ({ election, onViewCandidates, onCastVote }) => {
 
           <button
             onClick={() => onCastVote(election.id)}
-            className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+            className={`w-full flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium text-white ${status.actionClass}`}
           >
             <FiCheckCircle className="mr-2" />
-            Cast Your Vote
+            {status.actionText}
           </button>
         </div>
       </div>

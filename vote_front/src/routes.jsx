@@ -19,10 +19,10 @@ import AdminVoters from "./Pages/admin/Voters";
 import AdminResults from "./Pages/admin/Results";
 
 // Voter routes
-import VoterProfile from "./Pages/voter/Profile";
-import VoterElections from "./Pages/voter/Elections";
-import VoterVoting from "./Pages/voter/Voting";
+import VoterProfiles from "./Pages/voter/VoterProfile";
 import VoterResults from "./Pages/voter/Results";
+import VoterActiveElections from "./Pages/voter/VoterActiveElections";
+import VoterDashboard from "./Pages/voter/voterDashboard";
 
 // Candidate routes
 import CandidateProfile from "./Pages/canditate/Profile";
@@ -48,10 +48,13 @@ function AppRoutes() {
       <Route path="/admin/voters" element={<AdminVoters />} />
       <Route path="/admin/results" element={<AdminResults />} />
       {/* Voter Routes */}
-      <Route path="/voter/profile" element={<VoterProfile />} />
-      <Route path="/voter/elections" element={<VoterElections />} />
-      <Route path="/voter/vote/:electionId" element={<VoterVoting />} />
+      <Route path="/voter/profile" element={<VoterProfiles />} />
       <Route path="/voter/results" element={<VoterResults />} />
+      <Route path="/voter/Dashboard" element={<VoterDashboard />} />
+      <Route
+        path="/voter/VoterActiveElections"
+        element={<VoterActiveElections />}
+      />
       {/* Candidate Routes */}
       <Route path="/candidate/profile" element={<CandidateProfile />} />
       <Route path="/candidate/elections" element={<CandidateElections />} />

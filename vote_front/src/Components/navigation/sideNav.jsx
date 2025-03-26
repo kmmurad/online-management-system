@@ -7,8 +7,8 @@ import {
   FiSettings,
   FiMessageSquare,
   FiUser,
-  FiCheckCircle,
   FiAward,
+  FiClock,
 } from "react-icons/fi";
 
 const NavItem = ({ to, icon, label, badgeCount }) => (
@@ -61,15 +61,21 @@ const SideNav = ({ userRole = "voter", userData = {}, electionStats = {} }) => {
       items: [
         { to: "/candidate/dashboard", icon: <FiHome />, label: "Dashboard" },
         {
-          to: "/candidate/elections",
-          icon: <FiCalendar />,
-          label: "My Elections",
+          to: "/candidate/candidateActiveElections",
+          icon: <FiClock />,
+          label: "Active Elections",
           badgeCount: electionStats.activeElections || 0,
         },
         {
-          to: "/candidate/applications",
-          icon: <FiAward />,
-          label: "My Applications",
+          to: "/candidate/elections",
+          icon: <FiCalendar />,
+          label: "My Elections",
+          badgeCount: electionStats.pendingElections || 0,
+        },
+        {
+          to: "/candidate/candidates",
+          icon: <FiUser />,
+          label: "My Candidates",
           badgeCount: electionStats.pendingApplications || 0,
         },
         { to: "/candidate/profile", icon: <FiUser />, label: "My Profile" },
@@ -82,12 +88,12 @@ const SideNav = ({ userRole = "voter", userData = {}, electionStats = {} }) => {
       items: [
         { to: "/voter/dashboard", icon: <FiHome />, label: "Dashboard" },
         {
-          to: "/voter/elections",
+          to: "/voter/VoterActiveElections",
           icon: <FiCalendar />,
           label: "Active Elections",
           badgeCount: electionStats.activeElections || 0,
         },
-        { to: "/voter/vote", icon: <FiCheckCircle />, label: "Cast Vote" },
+        { to: "/voter/profile", icon: <FiUser />, label: "Profile" },
         { to: "/voter/results", icon: <FiPieChart />, label: "View Results" },
       ],
       brandName: "Voter Portal",

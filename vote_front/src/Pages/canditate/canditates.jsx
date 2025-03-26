@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { FiPlus, FiSearch } from "react-icons/fi";
+import { FiSearch, FiUser } from "react-icons/fi";
 import CandidateCard from "../../Components/CandidateCard";
+import CandidateSideNav from "../../Components/navigation/CandidateSideNav";
 
 const Candidates = () => {
-  const [candidates, setCandidates] = useState([
+  const [candidates] = useState([
     {
       id: 1,
       name: "John Doe",
@@ -21,15 +22,6 @@ const Candidates = () => {
   ]);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [newCandidate, setNewCandidate] = useState({
-    name: "",
-    position: "",
-    bio: "",
-    photo: null,
-  });
-
-  const positions = ["President", "Vice President", "Secretary", "Treasurer"];
 
   const filteredCandidates = candidates.filter(
     (candidate) =>
@@ -37,30 +29,23 @@ const Candidates = () => {
       candidate.position.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleAddCandidate = () => {
-    const newId =
-      candidates.length > 0 ? Math.max(...candidates.map((c) => c.id)) + 1 : 1;
-
-    setCandidates([...candidates, { ...newCandidate, id: newId }]);
-    setNewCandidate({ name: "", position: "", bio: "", photo: null });
-    setIsFormOpen(false);
-  };
-
-  const handleDeleteCandidate = (id) => {
-    setCandidates(candidates.filter((candidate) => candidate.id !== id));
-  };
-
   return (
-    <div className="p-6">
-      {/* Header and Search */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Candidates</h1>
-          <p className="text-gray-600">Manage election candidates</p>
-        </div>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Side Navigation */}
+      <div className="fixed left-0 top-0 bottom-0 w-64 z-10">
+        <CandidateSideNav />
+      </div>
 
-        <div className="flex gap-3 w-full md:w-auto">
-          <div className="relative flex-1">
+      {/* Main Content Area */}
+      <main className="flex-1 ml-64 min-h-screen p-6 md:p-8 overflow-y-auto">
+        {/* Header and Search */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800">Candidates</h1>
+            <p className="text-gray-600">View election candidates</p>
+          </div>
+
+          <div className="relative w-full md:w-64">
             <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -70,134 +55,34 @@ const Candidates = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2"
-          >
-            <FiPlus /> Add New
-          </button>
         </div>
-      </div>
 
-      {/* Candidates Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredCandidates.map((candidate) => (
-          <CandidateCard
-            key={candidate.id}
-            candidate={candidate}
-            onEdit={() => {
-              setNewCandidate(candidate);
-              setIsFormOpen(true);
-            }}
-            onDelete={handleDeleteCandidate}
-          />
-        ))}
-      </div>
-
-      {/* Empty State */}
-      {filteredCandidates.length === 0 && (
-        <div className="text-center py-12">
-          <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-            <FiSearch className="text-gray-400 text-2xl" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-800">
-            {searchTerm ? "No matching candidates" : "No candidates yet"}
-          </h3>
-          <p className="text-gray-500 mt-1">
-            {searchTerm
-              ? "Try a different search term"
-              : "Add your first candidate to get started"}
-          </p>
+        {/* Candidates Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredCandidates.map((candidate) => (
+            <CandidateCard key={candidate.id} candidate={candidate} />
+          ))}
         </div>
-      )}
 
-      {/* Add Candidate Modal */}
-      {isFormOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">
-                {newCandidate.id ? "Edit Candidate" : "Add New Candidate"}
-              </h2>
-              <button
-                onClick={() => setIsFormOpen(false)}
-                className="text-gray-500"
-              >
-                ✕
-              </button>
+        {/* Empty State */}
+        {filteredCandidates.length === 0 && (
+          <div className="text-center py-12">
+            <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <FiSearch className="text-gray-400 text-2xl" />
             </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  value={newCandidate.name}
-                  onChange={(e) =>
-                    setNewCandidate({ ...newCandidate, name: e.target.value })
-                  }
-                  className="w-full p-2 border rounded"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Position
-                </label>
-                <select
-                  value={newCandidate.position}
-                  onChange={(e) =>
-                    setNewCandidate({
-                      ...newCandidate,
-                      position: e.target.value,
-                    })
-                  }
-                  className="w-full p-2 border rounded"
-                  required
-                >
-                  <option value="">Select position</option>
-                  {positions.map((pos) => (
-                    <option key={pos} value={pos}>
-                      {pos}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">Bio</label>
-                <textarea
-                  value={newCandidate.bio}
-                  onChange={(e) =>
-                    setNewCandidate({ ...newCandidate, bio: e.target.value })
-                  }
-                  rows={3}
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4">
-                <button
-                  onClick={() => setIsFormOpen(false)}
-                  className="px-4 py-2 border rounded"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleAddCandidate}
-                  disabled={!newCandidate.name || !newCandidate.position}
-                  className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
-                >
-                  {newCandidate.id ? "Update" : "Save"}
-                </button>
-              </div>
-            </div>
+            <h3 className="text-lg font-medium text-gray-800">
+              {searchTerm
+                ? "No matching candidates"
+                : "No candidates available"}
+            </h3>
+            <p className="text-gray-500 mt-1">
+              {searchTerm
+                ? "Try a different search term"
+                : "Check back later for candidate information"}
+            </p>
           </div>
-        </div>
-      )}
+        )}
+      </main>
     </div>
   );
 };

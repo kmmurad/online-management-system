@@ -1,12 +1,12 @@
-import CandidateSideNav from "../../Components/navigation/CandidateSideNav";
 import ActiveElection from "../../Components/active_election";
+import VoterSideNav from "../../Components/navigation/VoterSideNav";
 
-const CandidateActiveElections = ({ userData, electionStats = {} }) => {
+const VoterActiveElections = ({ userData, electionStats = {} }) => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar Navigation */}
       <div className="fixed left-0 top-0 bottom-0 w-64 bg-white shadow z-10">
-        <CandidateSideNav userData={userData} electionStats={electionStats} />
+        <VoterSideNav userData={userData} electionStats={electionStats} />
       </div>
 
       {/* Main Content */}
@@ -22,4 +22,4 @@ const CandidateActiveElections = ({ userData, electionStats = {} }) => {
   );
 };
 
-export default CandidateActiveElections;
+export default VoterActiveElections;
